@@ -1,0 +1,32 @@
+cd 'master:/content/Home'
+Get-ChildItem -Recurse . | ForEach-Object{
+    
+    if($_.Fields["__Display name"].Value -eq "")
+    {
+        $originalName = $_.Name
+    }
+    else
+    {
+        $originalName = $_.Fields["__Display name"].Value    
+    }
+    
+    $newName = $originalName.Replace(" ", "-")
+    $newName = $newName.ToLower()
+    Write-Host "Renaming item from " -nonewline;
+    Write-Host $originalName -f Yellow -nonewline;
+    Write-Host " to " -nonewline;
+    Write-Host $newName -f Green;
+
+    if($newName -ne "")
+    {
+        $_.Editing.BeginEdit()
+        $_.Name = $newName;
+        $_.Fields["__Display name"].Value = $originalName;
+        $_.Editing.EndEdit()
+        ""
+   }
+    else
+    {
+        Write-Host $orignnalName
+    }
+}
